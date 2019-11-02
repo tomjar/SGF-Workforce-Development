@@ -3,10 +3,29 @@ import { Text, View, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-n
 import TextButton from './TextButton'
 import { red } from '../utils/colors.js'
 import { connect } from 'react-redux'
-import { black, white } from '../utils/colors'
-import { handleInitialData } from '../actions/index'
+import * as Permissions from 'expo-permissions'
+import * as Location from 'expo-location'
 
-class DeckList extends React.Component {
+
+class CurrentLocation extends React.Component {
+
+  getLocationAsync = async (id, e) => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    //TBD - save location!
+    console.log("Location is set!" + location.coords.longitude )
+
+    this.props.navigation.navigate(
+      'Jobs', { })
+  };
+
 
   render() {
     text=''
@@ -14,7 +33,7 @@ class DeckList extends React.Component {
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
   
         <Text style={styles.text}>Set Location For Job Search</Text>
-        <TextButton onPress={this.handleSubmit}>
+        <TextButton onPress={this.getLocationAsync}>
           Use My Current Location
         </TextButton>
         <View style={styles.separator}>
@@ -96,4 +115,4 @@ function mapStateToProps({ decks }) {
   }
 }
 
-export default connect(mapStateToProps)(DeckList)
+export default connect(mapStateToProps)(CurrentLocation)

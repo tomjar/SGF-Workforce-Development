@@ -9,9 +9,10 @@ import { Provider } from 'react-redux'
 
 // You can import from local files
 import CreateDeck from './components/CreateDeck';
+import Jobs from './components/Jobs';
 import DeckTop from './components/DeckTop';
 import DeckList from './components/DeckList';
-import Location from './components/Location';
+import CurrentLocation from './components/CurrentLocation';
 import ShowCards from './components/ShowCards';
 import AddCard from './components/AddCard';
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
@@ -33,8 +34,8 @@ function UdaciStatusBar({ backgroundColor, ...props }) {
 }
 
 const Tabs = createBottomTabNavigator({
-  Location: {
-    screen: Location,
+  CurrentLocation: {
+    screen: CurrentLocation,
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => <FontAwesome name='compass' size={30} color={tintColor} />
     },
@@ -82,8 +83,8 @@ const MainStack = createStackNavigator({
   Tabs: {
     screen: Tabs
   },
-  DeckTop: {
-    screen: DeckTop
+  Jobs: {
+    screen: Jobs
   },
   AddCard: {
     screen: AddCard
