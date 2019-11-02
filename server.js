@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Database variables 
-const db_url = 'mongodb://localhost:27017/workforce';
+const db_url = 'mongodb://localhost:41188/workforce';
 
 // Jobs api variables 
 const api_token = 'k6o0ANdEQWtHWaWNXmlbHQ3E5YPUAQUN4EmSeftJfd8GtCa9xD4WmKrudLaVisFeOcrhbEynzqdMJ8Tz';
