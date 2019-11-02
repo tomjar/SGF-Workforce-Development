@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 
 
 // You can import from local files
+import GoogleMap from './components/GoogleMap';
 import CreateDeck from './components/CreateDeck';
 import DeckTop from './components/DeckTop';
 import DeckList from './components/DeckList';
@@ -79,6 +80,9 @@ const Tabs = createBottomTabNavigator({
   })
 
 const MainStack = createStackNavigator({
+  GoogleMap: {
+    screen: GoogleMap
+  },
   Tabs: {
     screen: Tabs
   },
