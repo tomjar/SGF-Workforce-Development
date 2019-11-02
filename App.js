@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import CreateDeck from './components/CreateDeck';
 import DeckTop from './components/DeckTop';
 import DeckList from './components/DeckList';
+import Location from './components/Location';
 import ShowCards from './components/ShowCards';
 import AddCard from './components/AddCard';
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
@@ -32,18 +33,28 @@ function UdaciStatusBar({ backgroundColor, ...props }) {
 }
 
 const Tabs = createBottomTabNavigator({
-  DeckList: {
+  Location: {
+    screen: Location,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => <FontAwesome name='compass' size={30} color={tintColor} />
+    },
+  },
+  DeckList1: {
     screen: DeckList,
     navigationOptions: {
-      tabBarLabel: 'Deck List',
-      tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={20} color={tintColor} />
+      tabBarIcon: ({ tintColor }) => <FontAwesome name='bell' size={30} color={tintColor} />
+    },
+  },
+  DeckList2: {
+    screen: DeckList,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => <FontAwesome name='heart' size={30} color={tintColor} />
     },
   },
   CreateDeck: {
     screen: CreateDeck,
     navigationOptions: {
-      tabBarLabel: 'Create Deck',
-      tabBarIcon: ({ tintColor }) => <Ionicons name='ios-bookmarks' size={20} color={tintColor} />
+      tabBarIcon: ({ tintColor }) => <FontAwesome name='calendar' size={30} color={tintColor} />
     },
   }
 }, {
@@ -51,6 +62,7 @@ const Tabs = createBottomTabNavigator({
       header: null
     },
     tabBarOptions: {
+      showLabel: false,
       activeTintColor: Platform.OS === 'ios' ? purple : white,
       style: {
         height: 56,
@@ -68,7 +80,7 @@ const Tabs = createBottomTabNavigator({
 
 const MainStack = createStackNavigator({
   Tabs: {
-    screen: DeckTop
+    screen: Tabs
   },
   DeckTop: {
     screen: DeckTop
