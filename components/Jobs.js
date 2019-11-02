@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {  View, StyleSheet, Text } from 'react-native';
 import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 import TextButton from './TextButton'
 import Deck from './Deck.js'
 import { connect } from 'react-redux'
@@ -31,7 +32,13 @@ class Jobs extends React.Component {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        />
+        >
+          <Marker
+            coordinate={this.props.location.coords}
+            title="My Location"
+            description="This is where I am."
+          />
+        </MapView>
       </View>
         
     );
