@@ -4,7 +4,7 @@ const mongodb = require('mongodb').MongoClient;
 
 // Server variables
 const app = express(); 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Database variables 
 const db_url = 'mongodb://localhost:27017/workforce';
@@ -39,7 +39,6 @@ app.listen(port, () => {
     request.get(api_url, ((err, res, body) => {
         if (!err) {
             var locals = JSON.parse(body); 
-            console.log(locals.data[0]); 
 
             mongodb.connect(db_url, (err, client) => {
                 if (err) throw err; 
