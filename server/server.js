@@ -16,7 +16,21 @@ const api_url = `https://jobs.api.sgf.dev/api/event?api_token=${api_token}`;
 app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/jobs', (req, res) => {
-    
+    mongodb.connect(db_url, (err, client) => {
+        if (err) throw err;
+
+        var db = client.db('workforce');
+
+        try {
+            var query = db.collection("jobs").find({}).toArray(function (err, result) {
+                if (err) throw err;
+                res.send({'data': result}); 
+            });
+        } catch (e) {
+            console.log(e);
+            res.send('done with error'); 
+        }
+    }); 
 });
 
 app.listen(port, () => {
