@@ -1,5 +1,6 @@
 import { AsyncStorage } from 'react-native'
-import { Notifications, Permissions } from 'expo'
+import { Notifications, } from 'expo'
+import * as Permissions from 'expo-permissions';
 
 const NOTIFICATION_KEY = 'NOTIFICATION_KEY'
 
@@ -42,7 +43,7 @@ export function setLocalNotification() {
               tomorrow.setHours(20)
               tomorrow.setMinutes(0)
 
-              Notifications.scheduleLocalNotificationsAsync(
+              Notifications.scheduleLocalNotificationAsync(
                 createNotification(),
                 {
                   time: tomorrow,

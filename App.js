@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, StatusBar, Platform, AsyncStorage } from 'react-native';
 import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
@@ -68,7 +68,7 @@ const Tabs = createBottomTabNavigator({
 
 const MainStack = createStackNavigator({
   Tabs: {
-    screen: Tabs
+    screen: DeckTop
   },
   DeckTop: {
     screen: DeckTop

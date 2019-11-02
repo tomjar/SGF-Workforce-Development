@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   name: {
-    fontFamily: 'Verdana',
     fontSize: 28,
     textAlign: 'center',
   },
