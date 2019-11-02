@@ -21,9 +21,11 @@ class CurrentLocation extends React.Component {
     let location = await Location.getCurrentPositionAsync({});
     //TBD - save location!
     console.log("Location is set!" + location.coords.longitude )
+   
+   
 
-    this.props.navigation.navigate(
-      'Jobs', { })
+   this.props.navigation.navigate(
+      'Jobs', { location: location })
   };
 
 
