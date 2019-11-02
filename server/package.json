@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "nodemon server.js",
-    "start-dev": "nodemon server.js",
-    "start-prod": "node server.js" 
+    "start": "nodemon server.js"
   },
   "author": "Eric McCullough",
   "license": "MIT",
