@@ -3,5 +3,11 @@
   "version": "0.0.0",
   "description": "No description",
   "author": null,
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@google/maps": "^1.0.2",
+    "express": "^4.17.1",
+    "mongodb": "^3.3.3",
+    "request": "^2.88.0"
+  }
 }
