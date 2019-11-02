@@ -1,10 +1,10 @@
 {
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 6596,
-  "expoServerNgrokUrl": "https://tm-f3n.anonymous.udacity-flashcards-project.exp.direct",
-  "packagerNgrokUrl": "https://packager.tm-f3n.anonymous.udacity-flashcards-project.exp.direct",
-  "ngrokPid": 2264,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null,
   "devToolsPort": 19002
 }

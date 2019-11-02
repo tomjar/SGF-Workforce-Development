@@ -68,7 +68,7 @@ const Tabs = createBottomTabNavigator({
 
 const MainStack = createStackNavigator({
   Tabs: {
-    screen: DeckTop
+    screen: Tabs
   },
   DeckTop: {
     screen: DeckTop
