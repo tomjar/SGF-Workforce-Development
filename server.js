@@ -15,6 +15,42 @@ const db_url = process.env.MONGODB_URI;
 const api_token = 'k6o0ANdEQWtHWaWNXmlbHQ3E5YPUAQUN4EmSeftJfd8GtCa9xD4WmKrudLaVisFeOcrhbEynzqdMJ8Tz';
 const api_url = `https://jobs.api.sgf.dev/api/event?api_token=${api_token}`;
 
+app.get('/jobs/15', function (req, res) {
+    mongodb.connect(db_url, (err, client) => {
+        if (err) throw err;
+
+        var db = client.db(process.env.MONGODB_NAME);
+
+        try {
+            var query = db.collection("jobs").find({}).toArray(function (err, result) {
+                if (err) throw err;
+                var fifteenJobs = result.slice(0, 15).map(function (element, index) {
+                    return {
+                        // url: element.url,
+                        // urlimg: element.url_image,
+                        // phone: element.phone,
+                        // emai: element.email
+                        description: element.description,
+                        id: element.id,
+                        jobtitle: element.title,
+                        company: element.company,
+                        lat: element.location.lat,
+                        long: element.location.long,
+                        cycling: 5,
+                        car: 5,
+                        bus: 5,
+                        walking: 5
+                    };
+                });
+                res.send({ 'data': fifteenJobs });
+            });
+        } catch (e) {
+            console.log(e);
+            res.send('done with error');
+        }
+    });
+});
+
 app.get('/jobs/10', function (req, res) {
     mongodb.connect(db_url, (err, client) => {
         if (err) throw err;
