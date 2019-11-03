@@ -64,7 +64,8 @@ app.get('/jobs/10', function (req, res) {
                 var tenJobs = result.slice(0, 9);
                 // 37.2119519,-93.2925957
                 let efactoryLatLong = '37.2119519,-93.2925957';
-
+                console.log('printing ten jobs!!');
+                console.log(tenJobs);
                 getJobsAndDistances(efactoryLatLong, tenJobs, function (response) {
                     res.send({ 'response': response });
                 });
@@ -207,7 +208,7 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
     for (let i = 0; i < mojobsLatLong.length; i++) {
 
         let jobLatLong = `${mojobsLatLong[i].lat},${mojobsLatLong[i].long}`;
-        getDistance(currLatLong, jobLatLong, function (response) {
+        getDistance (currLatLong, jobLatLong, function (response) {
             let jobAndDistance = mojobsAndDistances[i];
 
             jobAndDistance.car = response.car;
