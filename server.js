@@ -26,10 +26,10 @@ app.get('/jobs/15', function (req, res) {
                 if (err) throw err;
                 var fifteenJobs = result.slice(0, 15).map(function (element, index) {
                     return {
-                        // url: element.url,
-                        // urlimg: element.url_image,
-                        // phone: element.phone,
-                        // emai: element.email
+                        url: element.url,
+                        urlimg: element.url_image,
+                        phone: element.phone,
+                        email: element.email,
                         description: element.description,
                         id: element.id.toString(),
                         jobtitle: element.title,
@@ -40,6 +40,7 @@ app.get('/jobs/15', function (req, res) {
                         car: 5,
                         bus: 5,
                         walking: 5
+
                     };
                 });
                 res.send({ 'data': fifteenJobs });
