@@ -29,11 +29,20 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/jobs/5', (req, res) =>{
     let jobsJson = {data: [
-        {id:'1', jobtitle: 'Programmer', company: 'Company 1', cycling:5, car:5, bus:5, walking:5},
-        {id:'2', jobtitle: 'Electrican', company: 'Company 2', cycling:6, car:5, bus:5, walking:5},
-        {id:'3', jobtitle: 'Plumber', company: 'Company 3', cycling:5, car:5, bus:5, walking:5},
-        {id:'4', jobtitle: 'Teacher', company: 'Company 4', cycling:9, car:5, bus:5, walking:5},
-        {id:'5', jobtitle: 'Janitor', company: 'Company 5', cycling:5, car:5, bus:5, walking:5}
+        // 37.2196049,-93.2885553
+        {id:'1', jobtitle: 'Programmer', company: 'Company 1',  lat:37.2196049, long:-93.2885553, cycling:5, car:5, bus:5, walking:5},
+
+        // 37.2025157,-93.2940485
+        {id:'2', jobtitle: 'Electrican', company: 'Company 2',  lat:37.2025157, long:-93.2940485, cycling:6, car:5, bus:5, walking:5},
+
+        // 37.1744811,-93.2944777
+        {id:'3', jobtitle: 'Plumber', company: 'Company 3',     lat:37.17444811, long:-93.2944777, cycling:5, car:5, bus:5, walking:5},
+
+        // 37.1696595,-93.2516052
+        {id:'4', jobtitle: 'Teacher', company: 'Company 4',     lat:37.1696595, long:-93.2516052, cycling:9, car:5, bus:5, walking:5},
+
+        // 37.1655557,-93.2340958
+        {id:'5', jobtitle: 'Janitor', company: 'Company 5',     lat:37.1655557, long:-93.2340958, cycling:5, car:5, bus:5, walking:5}
     ]
     };
 
