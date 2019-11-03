@@ -61,7 +61,7 @@ app.get('/jobs/10', function (req, res) {
         try {
             var query = db.collection("jobs").find({}).toArray(function (err, result) {
                 if (err) throw err;
-                var tenJobs = result.slice(0, 10);
+                var tenJobs = result.slice(0, 1);
                 // 37.2119519,-93.2925957
                 let efactoryLatLong = '37.2119519,-93.2925957';
 
@@ -208,7 +208,6 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
 
         let jobLatLong = `${mojobsLatLong[i].lat},${mojobsLatLong[i].long}`;
         getDistance(currLatLong, jobLatLong, function (response) {
-            console.log(response);
             let jobAndDistance = mojobsAndDistances[i];
 
             jobAndDistance.car = response.car;
@@ -216,12 +215,13 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
             jobAndDistance.bus = response.bus;
             jobAndDistance.bicycle = response.bicycle;
 
-
+            // 
             mojobsAndDistances.push(jobAndDistance);
+            callback(mojobsAndDistances);
 
         });
     }
-    callback(mojobsAndDistances);
+    
 }
 
 // travel mode is optional
