@@ -16,19 +16,28 @@ const api_token = 'k6o0ANdEQWtHWaWNXmlbHQ3E5YPUAQUN4EmSeftJfd8GtCa9xD4WmKrudLaVi
 const api_url = `https://jobs.api.sgf.dev/api/event?api_token=${api_token}`;
 
 app.get('/jobs/10', function (req, res) {
-    var query = db.collection("jobs").find({}).toArray(function (err, result) {
+    mongodb.connect(db_url, (err, client) => {
         if (err) throw err;
 
-        var tenJobs = result.slice(0, 10);
-        // 37.2119519,-93.2925957
-        let efactoryLatLong = '37.2119519,-93.2925957';
+        var db = client.db(process.env.MONGODB_NAME);
 
-        getJobsAndDistances(efactoryLatLong, tenJobs, function (response) {
-            res.send({ 'response': response });
-        });
+        try {
+            var query = db.collection("jobs").find({}).toArray(function (err, result) {
+                if (err) throw err;
+                var tenJobs = result.slice(0, 10);
+                // 37.2119519,-93.2925957
+                let efactoryLatLong = '37.2119519,-93.2925957';
+
+                getJobsAndDistances(efactoryLatLong, tenJobs, function (response) {
+                    res.send({ 'response': response });
+                });
+            });
+        } catch (e) {
+            console.log(e);
+            res.send('done with error');
+        }
     });
 });
-
 
 app.get('/googleapi', function (req, res) {
     let currentAddress = '405 N Jefferson Ave, Springfield, MO 65806',
