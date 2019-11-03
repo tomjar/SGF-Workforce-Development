@@ -29,11 +29,11 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/jobs/5', (req, res) =>{
     let jobsJson = {data: [
-        {jobtitle: 'Programmer', company: 'Company 1', cycling:5, car:5, bus:5, walking:5},
-        {jobtitle: 'Electrican', company: 'Company 2', cycling:6, car:5, bus:5, walking:5},
-        {jobtitle: 'Plumber', company: 'Company 3', cycling:5, car:5, bus:5, walking:5},
-        {jobtitle: 'Teacher', company: 'Company 4', cycling:9, car:5, bus:5, walking:5},
-        {jobtitle: 'Janitor', company: 'Company 5', cycling:5, car:5, bus:5, walking:5}
+        {id:1, jobtitle: 'Programmer', company: 'Company 1', cycling:5, car:5, bus:5, walking:5},
+        {id:2, jobtitle: 'Electrican', company: 'Company 2', cycling:6, car:5, bus:5, walking:5},
+        {id:3, jobtitle: 'Plumber', company: 'Company 3', cycling:5, car:5, bus:5, walking:5},
+        {id:4, jobtitle: 'Teacher', company: 'Company 4', cycling:9, car:5, bus:5, walking:5},
+        {id:5, jobtitle: 'Janitor', company: 'Company 5', cycling:5, car:5, bus:5, walking:5}
     ]
     };
 
