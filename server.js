@@ -15,6 +15,21 @@ const db_url = process.env.MONGODB_URI;
 const api_token = 'k6o0ANdEQWtHWaWNXmlbHQ3E5YPUAQUN4EmSeftJfd8GtCa9xD4WmKrudLaVisFeOcrhbEynzqdMJ8Tz';
 const api_url = `https://jobs.api.sgf.dev/api/event?api_token=${api_token}`;
 
+app.get('/jobs/10', function (req, res) {
+    var query = db.collection("jobs").find({}).toArray(function (err, result) {
+        if (err) throw err;
+
+        var tenJobs = result.slice(0, 10);
+        // 37.2119519,-93.2925957
+        let efactoryLatLong = '37.2119519,-93.2925957';
+
+        getJobsAndDistances(efactoryLatLong, tenJobs, function (response) {
+            res.send({ 'response': response });
+        });
+    });
+});
+
+
 app.get('/googleapi', function (req, res) {
     let currentAddress = '405 N Jefferson Ave, Springfield, MO 65806',
         jobAddress = '1423 N Jefferson Ave, Springfield, MO 65802';
@@ -30,20 +45,11 @@ app.get('/', (req, res) => res.send('Hello World!'));
 app.get('/jobs/5', (req, res) => {
     let jobsJson = {
         data: [
-            // 37.2196049,-93.2885553
-            { id: '1', jobtitle: 'Programmer', company: 'Company 1', lat: 37.2196049, long: -93.2885553, cycling: 5, car: 5, bus: 5, walking: 5 },
-
-            // 37.2025157,-93.2940485
-            { id: '2', jobtitle: 'Electrican', company: 'Company 2', lat: 37.2025157, long: -93.2940485, cycling: 6, car: 5, bus: 5, walking: 5 },
-
-            // 37.1744811,-93.2944777
-            { id: '3', jobtitle: 'Plumber', company: 'Company 3', lat: 37.17444811, long: -93.2944777, cycling: 5, car: 5, bus: 5, walking: 5 },
-
-            // 37.1696595,-93.2516052
-            { id: '4', jobtitle: 'Teacher', company: 'Company 4', lat: 37.1696595, long: -93.2516052, cycling: 9, car: 5, bus: 5, walking: 5 },
-
-            // 37.1655557,-93.2340958
-            { id: '5', jobtitle: 'Janitor', company: 'Company 5', lat: 37.1655557, long: -93.2340958, cycling: 5, car: 5, bus: 5, walking: 5 }
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '1', jobtitle: 'Programmer', company: 'Company 1', lat: 37.2196049, long: -93.2885553, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '2', jobtitle: 'Electrican', company: 'Company 2', lat: 37.2025157, long: -93.2940485, cycling: 6, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '3', jobtitle: 'Plumber', company: 'Company 3', lat: 37.17444811, long: -93.2944777, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '4', jobtitle: 'Teacher', company: 'Company 4', lat: 37.1696595, long: -93.2516052, cycling: 9, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '5', jobtitle: 'Janitor', company: 'Company 5', lat: 37.1655557, long: -93.2340958, cycling: 5, car: 5, bus: 5, walking: 5 }
         ]
     };
 
@@ -111,8 +117,83 @@ function shutdown() {
     process.exit(0);
 }
 
+/**
+ * 
+ * @param {String} currLat 
+ * @param {String} currLong
+ * @param {String} travelmode 
+ * @param {Array} mojobs 
+ * @param {Function} callback 
+ */
+function getJobsAndDistances(currLatLong, mojobs, callback) {
+
+    var mojobsLatLong = mojobs.map(function (element, index) {
+        return {
+            id: element.id,
+            title: element.title,
+            description: element.description,
+            lat: element.location.lat,
+            long: element.location.lng,
+            company: element.location.name,
+            url: element.url,
+            urlimg: element.url_image,
+            phone: element.phone,
+            emai: element.email
+        }
+    });
+
+
+    var mojobsAndDistances = [];
+
+    // var jobObj = {
+    //     id: element.id,
+    //     title: element.title,
+    //     description: element.description,
+    //     lat: element.location.lat,
+    //     long: element.location.lng,
+    //     company: element.location.name,
+    //     url: element.url,
+    //     urlimg: element.url_image,
+    //     phone: element.phone,
+    //     email: element.email,
+    //     car,
+    //     bicycle,
+    //     bus,
+    //     walk
+    // };
+
+
+    for (let i = 0; i < mojobsLatLong.length; i++) {
+
+        let jobLatLong = `${mojobsLatLong[i].lat},${mojobsLatLong[i].long}`;
+        getDistance(currLatLong, jobLatLong, function (response) {
+            let jobAndDistance = mojobsAndDistances[i];
+
+            jobAndDistance.car = response.car;
+            jobAndDistance.walk = response.walk;
+            jobAndDistance.bus = response.bus;
+            jobAndDistance.bicycle = response.bicycle;
+
+
+            mojobsAndDistances.push(jobAndDistance);
+
+        });
+    }
+
+    callback(mojobsAndDistances);
+}
+
 // travel mode is optional
-function getDistance(currentAddress, jobAddress, travelmode, callback) {
+// danger have some sensible defaults!
+/**
+ * 
+ * @param {*} currLat 
+ * @param {*} currLong 
+ * @param {Array} jobLatAndLongsArr 
+ * @param {*} travelmode 
+ * @param {*} callback 
+ */
+function getDistance(currLatLong, jobLatLong, callback) {
     // https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
     const googleMapsClient = require('@google/maps').createClient({
         key: 'AIzaSyDpQoxtbTKGtDD2Cg2F33P6rqhAfoq3GVM'
@@ -121,12 +202,12 @@ function getDistance(currentAddress, jobAddress, travelmode, callback) {
     // Geocode an address.
     googleMapsClient.distanceMatrix({
         units: 'imperial',
-        origins: currentAddress,
-        destinations: jobAddress
+        origins: currLatLong,
+        destinations: jobLatLong
     }, function (err, response) {
 
         if (!err) {
-            callback(response);
+            callback({ car: -1, walk: -1, bus: -1, bicycle: -1 });
         } else {
             console.log(err);
         }
