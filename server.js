@@ -35,7 +35,7 @@ app.get('/jobs/15', function (req, res) {
                         jobtitle: element.title,
                         company: element.company,
                         lat: element.location.lat,
-                        long: element.location.long,
+                        long: element.location.lng,
                         cycling: 5,
                         car: 5,
                         bus: 5,
