@@ -1,9 +1,9 @@
-const express = require('express'); 
-const request = require('request'); 
+const express = require('express');
+const request = require('request');
 const mongodb = require('mongodb').MongoClient;
 
 // Server variables
-const app = express(); 
+const app = express();
 const port = process.env.PORT || 3000;
 
 // Database variables 
@@ -13,37 +13,38 @@ const db_url = process.env.MONGODB_URI;
 
 // Jobs api variables 
 const api_token = 'k6o0ANdEQWtHWaWNXmlbHQ3E5YPUAQUN4EmSeftJfd8GtCa9xD4WmKrudLaVisFeOcrhbEynzqdMJ8Tz';
-const api_url = `https://jobs.api.sgf.dev/api/event?api_token=${api_token}`; 
+const api_url = `https://jobs.api.sgf.dev/api/event?api_token=${api_token}`;
 
-app.get('/googleapi', function(req, res){
+app.get('/googleapi', function (req, res) {
     let currentAddress = '405 N Jefferson Ave, Springfield, MO 65806',
-    jobAddress = '1423 N Jefferson Ave, Springfield, MO 65802';
+        jobAddress = '1423 N Jefferson Ave, Springfield, MO 65802';
 
-    getDistance(currentAddress, jobAddress, 'bicycling', function(response){
-        res.send({'response': response});
+    getDistance(currentAddress, jobAddress, 'bicycling', function (response) {
+        res.send({ 'response': response });
     });
-    
+
 });
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
-app.get('/jobs/5', (req, res) =>{
-    let jobsJson = {data: [
-        // 37.2196049,-93.2885553
-        {id:'1', jobtitle: 'Programmer', company: 'Company 1',  lat:37.2196049, long:-93.2885553, cycling:5, car:5, bus:5, walking:5},
+app.get('/jobs/5', (req, res) => {
+    let jobsJson = {
+        data: [
+            // 37.2196049,-93.2885553
+            { id: '1', jobtitle: 'Programmer', company: 'Company 1', lat: 37.2196049, long: -93.2885553, cycling: 5, car: 5, bus: 5, walking: 5 },
 
-        // 37.2025157,-93.2940485
-        {id:'2', jobtitle: 'Electrican', company: 'Company 2',  lat:37.2025157, long:-93.2940485, cycling:6, car:5, bus:5, walking:5},
+            // 37.2025157,-93.2940485
+            { id: '2', jobtitle: 'Electrican', company: 'Company 2', lat: 37.2025157, long: -93.2940485, cycling: 6, car: 5, bus: 5, walking: 5 },
 
-        // 37.1744811,-93.2944777
-        {id:'3', jobtitle: 'Plumber', company: 'Company 3',     lat:37.17444811, long:-93.2944777, cycling:5, car:5, bus:5, walking:5},
+            // 37.1744811,-93.2944777
+            { id: '3', jobtitle: 'Plumber', company: 'Company 3', lat: 37.17444811, long: -93.2944777, cycling: 5, car: 5, bus: 5, walking: 5 },
 
-        // 37.1696595,-93.2516052
-        {id:'4', jobtitle: 'Teacher', company: 'Company 4',     lat:37.1696595, long:-93.2516052, cycling:9, car:5, bus:5, walking:5},
+            // 37.1696595,-93.2516052
+            { id: '4', jobtitle: 'Teacher', company: 'Company 4', lat: 37.1696595, long: -93.2516052, cycling: 9, car: 5, bus: 5, walking: 5 },
 
-        // 37.1655557,-93.2340958
-        {id:'5', jobtitle: 'Janitor', company: 'Company 5',     lat:37.1655557, long:-93.2340958, cycling:5, car:5, bus:5, walking:5}
-    ]
+            // 37.1655557,-93.2340958
+            { id: '5', jobtitle: 'Janitor', company: 'Company 5', lat: 37.1655557, long: -93.2340958, cycling: 5, car: 5, bus: 5, walking: 5 }
+        ]
     };
 
     res.send(jobsJson);
@@ -58,13 +59,13 @@ app.get('/jobs', (req, res) => {
         try {
             var query = db.collection("jobs").find({}).toArray(function (err, result) {
                 if (err) throw err;
-                res.send({'data': result}); 
+                res.send({ 'data': result });
             });
         } catch (e) {
             console.log(e);
-            res.send('done with error'); 
+            res.send('done with error');
         }
-    }); 
+    });
 });
 
 app.listen(port, () => {
@@ -72,12 +73,12 @@ app.listen(port, () => {
     console.log(`using url: ${api_url}`)
     request.get(api_url, ((err, res, body) => {
         if (!err) {
-            var locals = JSON.parse(body); 
+            var locals = JSON.parse(body);
 
             mongodb.connect(db_url, (err, client) => {
-                if (err) throw err; 
+                if (err) throw err;
 
-                var db = client.db('workforce'); 
+                var db = client.db(process.env.MONGODB_NAME);
 
                 try {
                     db.collection('jobs').insertMany(locals.data);
@@ -93,45 +94,45 @@ app.listen(port, () => {
 
 function shutdown() {
     mongodb.connect(db_url, (err, client) => {
-                if (err) throw err; 
+        if (err) throw err;
 
-                var db = client.db('workforce'); 
+        var db = client.db(process.env.MONGODB_NAME);
 
-                try {
-                    db.collection('jobs').drop((err, ok) => {
-                        if (err) throw err;
-                        if (ok) console.log('Deleted records'); 
-                    }); 
-                } catch (e) {
-                    console.log(e);
-                }
+        try {
+            db.collection('jobs').drop((err, ok) => {
+                if (err) throw err;
+                if (ok) console.log('Deleted records');
             });
+        } catch (e) {
+            console.log(e);
+        }
+    });
 
-    process.exit(0); 
+    process.exit(0);
 }
 
 // travel mode is optional
-function getDistance(currentAddress, jobAddress, travelmode, callback){
- // https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
+function getDistance(currentAddress, jobAddress, travelmode, callback) {
+    // https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
     const googleMapsClient = require('@google/maps').createClient({
         key: 'AIzaSyDpQoxtbTKGtDD2Cg2F33P6rqhAfoq3GVM'
-      });
+    });
 
-      // Geocode an address.
-        googleMapsClient.distanceMatrix({
-            units: 'imperial',
-            origins: currentAddress,
-            destinations: jobAddress
-        }, function(err, response){
-            
-            if (!err) {
-                callback(response);
-                }else{
-                    console.log(err);
-                }
-        });
+    // Geocode an address.
+    googleMapsClient.distanceMatrix({
+        units: 'imperial',
+        origins: currentAddress,
+        destinations: jobAddress
+    }, function (err, response) {
 
-      // googleMapsClient.distanceMatrix
+        if (!err) {
+            callback(response);
+        } else {
+            console.log(err);
+        }
+    });
+
+    // googleMapsClient.distanceMatrix
 
     // GoogleMapsLoader.KEY = 'AIzaSyDpQoxtbTKGtDD2Cg2F33P6rqhAfoq3GVM';
     // GoogleMapsLoader.LIBRARIES = ['geometry', 'places'];
@@ -139,7 +140,7 @@ function getDistance(currentAddress, jobAddress, travelmode, callback){
     // GoogleMapsLoader.REGION = 'USA';
 
     // GoogleMapsLoader.onLoad(function(google) {
-        
+
     // });
 
     // GoogleMapsLoader.release(function() {
@@ -150,7 +151,7 @@ function getDistance(currentAddress, jobAddress, travelmode, callback){
 
     // var destinationA = 'Stockholm, Sweden';
     // var destinationB = new google.maps.LatLng(50.087692, 14.421150);
-    
+
     // var service = new google.maps.DistanceMatrixService();
     // service.getDistanceMatrix(
     //   {
@@ -163,7 +164,7 @@ function getDistance(currentAddress, jobAddress, travelmode, callback){
     //     avoidHighways: Boolean,
     //     avoidTolls: Boolean,
     //   }, callback);
-    
+
     // function callback(response, status) {
     //   // See Parsing the Results for
     //   // the basics of a callback function.
