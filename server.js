@@ -192,7 +192,7 @@ function getDistance(currLatLong, jobLatLong, callback) {
         units: 'imperial',
         origins: currLatLong,
         destinations: jobLatLong,
-        mode: 'transit|bicycling|walking|driving'
+        mode: 'walking'
     }, function (err, response) {
 
         if (!err) {
