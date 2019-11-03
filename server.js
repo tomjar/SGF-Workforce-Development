@@ -31,7 +31,7 @@ app.get('/jobs/15', function (req, res) {
                         // phone: element.phone,
                         // emai: element.email
                         description: element.description,
-                        id: element.id,
+                        id: element.id.toString(),
                         jobtitle: element.title,
                         company: element.company,
                         lat: element.location.lat,
