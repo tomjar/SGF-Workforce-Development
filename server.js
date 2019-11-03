@@ -217,10 +217,12 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
 
             // 
             mojobsAndDistances.push(jobAndDistance);
-            callback(mojobsAndDistances);
+            
 
         });
     }
+
+    callback(mojobsAndDistances);
     
 }
 
