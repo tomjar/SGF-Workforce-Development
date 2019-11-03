@@ -66,6 +66,7 @@ app.get('/jobs/10', function (req, res) {
                 let efactoryLatLong = '37.2119519,-93.2925957';
 
                 getJobsAndDistances(efactoryLatLong, tenJobs, function (response) {
+                    console.log(response);
                     res.send({ 'response': response });
                 });
             });
@@ -197,7 +198,7 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
             url: element.url,
             urlimg: element.url_image,
             phone: element.phone,
-            emai: element.email
+            email: element.email
         }
     });
 
