@@ -8,7 +8,8 @@ const port = process.env.PORT || 3000;
 
 // Database variables 
 // workforce
-const db_url = 'mongodb://localhost:27017/heroku_xcxcp6fd';
+// MONGODB_URI
+const db_url = process.env.MONGODB_URI;
 
 // Jobs api variables 
 const api_token = 'k6o0ANdEQWtHWaWNXmlbHQ3E5YPUAQUN4EmSeftJfd8GtCa9xD4WmKrudLaVisFeOcrhbEynzqdMJ8Tz';
