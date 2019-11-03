@@ -24,7 +24,7 @@ app.get('/jobs/15', function (req, res) {
         try {
             var query = db.collection("jobs").find({}).toArray(function (err, result) {
                 if (err) throw err;
-                var fifteenJobs = result.slice(0, 15).map(function (element, index) {
+                var fifteenJobs = result.slice(0, 14).map(function (element, index) {
                     return {
                         url: element.url,
                         urlimg: element.url_image,
@@ -61,7 +61,7 @@ app.get('/jobs/10', function (req, res) {
         try {
             var query = db.collection("jobs").find({}).toArray(function (err, result) {
                 if (err) throw err;
-                var tenJobs = result.slice(0, 1);
+                var tenJobs = result.slice(0, 9);
                 // 37.2119519,-93.2925957
                 let efactoryLatLong = '37.2119519,-93.2925957';
 
@@ -217,11 +217,16 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
 
             // 
             mojobsAndDistances.push(jobAndDistance);
+
+            console.log('pushed!!!');
+            console.log(jobAndDistance);
             
 
         });
     }
 
+    console.log('calling back!!');
+    console.log(mojobsAndDistances);
     callback(mojobsAndDistances);
     
 }
