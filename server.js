@@ -31,7 +31,7 @@ app.get('/jobs', (req, res) => {
     mongodb.connect(db_url, (err, client) => {
         if (err) throw err;
 
-        var db = client.db('workforce');
+        var db = client.db(process.env.MONGODB_NAME);
 
         try {
             var query = db.collection("jobs").find({}).toArray(function (err, result) {
