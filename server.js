@@ -66,7 +66,6 @@ app.get('/jobs/10', function (req, res) {
                 let efactoryLatLong = '37.2119519,-93.2925957';
 
                 getJobsAndDistances(efactoryLatLong, tenJobs, function (response) {
-                    console.log(response);
                     res.send({ 'response': response });
                 });
             });
@@ -222,8 +221,6 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
 
         });
     }
-
-    console.log(mojobsAndDistances);
     callback(mojobsAndDistances);
 }
 
@@ -250,7 +247,6 @@ function getDistance(currLatLong, jobLatLong, callback) {
     }, function (err, response) {
 
         if (!err) {
-            console.log(response);
             let elements = response.rows[0].elements;
             let isArray = Array.isArray(elements);
             let distanceValue,
@@ -265,7 +261,7 @@ function getDistance(currLatLong, jobLatLong, callback) {
                 callback({ car: -1, bicycle: -1, bus: -1, walk: -1, gresp: distanceValues });
             } else {
                 // distanceValue;
-                callback({ car: -1, bicycle: -1, bus: -1, walk: -1, gresp: distanceValue});
+                callback({ car: -1, bicycle: -1, bus: -1, walk: -1, gresp: distanceValue });
             }
         } else {
             console.log(err);
