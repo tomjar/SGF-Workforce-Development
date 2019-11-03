@@ -128,9 +128,7 @@ function shutdown() {
 
 /**
  * 
- * @param {String} currLat 
- * @param {String} currLong
- * @param {String} travelmode 
+ * @param {String} currLatLong 
  * @param {Array} mojobs 
  * @param {Function} callback 
  */
@@ -154,24 +152,6 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
 
     var mojobsAndDistances = [];
 
-    // var jobObj = {
-    //     id: element.id,
-    //     title: element.title,
-    //     description: element.description,
-    //     lat: element.location.lat,
-    //     long: element.location.lng,
-    //     company: element.location.name,
-    //     url: element.url,
-    //     urlimg: element.url_image,
-    //     phone: element.phone,
-    //     email: element.email,
-    //     car,
-    //     bicycle,
-    //     bus,
-    //     walk
-    // };
-
-
     for (let i = 0; i < mojobsLatLong.length; i++) {
 
         let jobLatLong = `${mojobsLatLong[i].lat},${mojobsLatLong[i].long}`;
@@ -189,18 +169,17 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
         });
     }
 
+    console.log(mojobsAndDistances);
     callback(mojobsAndDistances);
 }
 
 // travel mode is optional
-// danger have some sensible defaults!
+// TODO:  have some sensible defaults!
 /**
  * 
- * @param {*} currLat 
- * @param {*} currLong 
- * @param {Array} jobLatAndLongsArr 
- * @param {*} travelmode 
- * @param {*} callback 
+ * @param {String} currLatLong 
+ * @param {String} jobLatLong 
+ * @param {Function} callback 
  */
 function getDistance(currLatLong, jobLatLong, callback) {
     // https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
@@ -212,56 +191,26 @@ function getDistance(currLatLong, jobLatLong, callback) {
     googleMapsClient.distanceMatrix({
         units: 'imperial',
         origins: currLatLong,
-        destinations: jobLatLong
+        destinations: jobLatLong,
+        mode: transit|bicycling|walking|driving
     }, function (err, response) {
 
         if (!err) {
-            callback({ car: -1, walk: -1, bus: -1, bicycle: -1 });
+            console.log(response);
+            let distanceArr = response.rows[0].elements.map(function(element){
+                // in seconds
+                return element.duration.value;
+            });
+
+            console.log(distanceArr);
+
+            callback({car: -1, bicycle:-1, bus:-1, walk:-1});
+            
         } else {
             console.log(err);
         }
     });
-
-    // googleMapsClient.distanceMatrix
-
-    // GoogleMapsLoader.KEY = 'AIzaSyDpQoxtbTKGtDD2Cg2F33P6rqhAfoq3GVM';
-    // GoogleMapsLoader.LIBRARIES = ['geometry', 'places'];
-    // GoogleMapsLoader.LANGUAGE = 'eng';
-    // GoogleMapsLoader.REGION = 'USA';
-
-    // GoogleMapsLoader.onLoad(function(google) {
-
-    // });
-
-    // GoogleMapsLoader.release(function() {
-    //     console.log('No google maps api around');
-    // });
-
-    // var origin1 = new google.maps.LatLng(55.930385, -3.118425);
-
-    // var destinationA = 'Stockholm, Sweden';
-    // var destinationB = new google.maps.LatLng(50.087692, 14.421150);
-
-    // var service = new google.maps.DistanceMatrixService();
-    // service.getDistanceMatrix(
-    //   {
-    //     origins: [origin1, origin2],
-    //     destinations: [destinationA, destinationB],
-    //     travelMode: 'DRIVING',
-    //     transitOptions: TransitOptions,
-    //     drivingOptions: DrivingOptions,
-    //     unitSystem: UnitSystem,
-    //     avoidHighways: Boolean,
-    //     avoidTolls: Boolean,
-    //   }, callback);
-
-    // function callback(response, status) {
-    //   // See Parsing the Results for
-    //   // the basics of a callback function.
-    //   console.log(response);
-    // }
 }
 
 process.on('SIGINT', shutdown);
-
 process.on('SIGTERM', shutdown);
