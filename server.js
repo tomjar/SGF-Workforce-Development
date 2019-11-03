@@ -58,7 +58,22 @@ app.get('/jobs/5', (req, res) => {
             { description: 'The quick brown fox jumps over the lazy dog.', id: '2', jobtitle: 'Electrican', company: 'Company 2', lat: 37.2025157, long: -93.2940485, cycling: 6, car: 5, bus: 5, walking: 5 },
             { description: 'The quick brown fox jumps over the lazy dog.', id: '3', jobtitle: 'Plumber', company: 'Company 3', lat: 37.17444811, long: -93.2944777, cycling: 5, car: 5, bus: 5, walking: 5 },
             { description: 'The quick brown fox jumps over the lazy dog.', id: '4', jobtitle: 'Teacher', company: 'Company 4', lat: 37.1696595, long: -93.2516052, cycling: 9, car: 5, bus: 5, walking: 5 },
-            { description: 'The quick brown fox jumps over the lazy dog.', id: '5', jobtitle: 'Janitor', company: 'Company 5', lat: 37.1655557, long: -93.2340958, cycling: 5, car: 5, bus: 5, walking: 5 }
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '5', jobtitle: 'Janitor', company: 'Company 5', lat: 37.1655557, long: -93.2340958, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '6', jobtitle: 'Chef', company: 'Company 6', lat: 37.1196049, long: -93.1885553, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '7', jobtitle: 'Astronaut', company: 'Company 7', lat: 37.2025157, long: -93.4940485, cycling: 6, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '8', jobtitle: 'Professor', company: 'Company 8', lat: 37.37444811, long: -93.3944777, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '9', jobtitle: 'Cashier', company: 'Company 9', lat: 37.4696595, long: -93.4516052, cycling: 9, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '10', jobtitle: 'Cop', company: 'Company 10', lat: 37.5655557, long: -93.5340958, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '11', jobtitle: 'Security Guard', company: 'Company 11', lat: 37.7196049, long: -93.6885553, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '12', jobtitle: 'Bartender', company: 'Company 12', lat: 37.8025157, long: -93.8940485, cycling: 6, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '13', jobtitle: 'Aerospace Engineer', company: 'Company 13', lat: 37.97444811, long: -93.9944777, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '14', jobtitle: 'Nurse', company: 'Company 14', lat: 37.1691595, long: -93.2511052, cycling: 9, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '15', jobtitle: 'Doctor', company: 'Company 15', lat: 31.1655557, long: -91.2340958, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '16', jobtitle: 'Student', company: 'Company 16', lat: 32.2196049, long: -92.2885553, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '17', jobtitle: 'Typist', company: 'Company 17', lat: 33.2025157, long: -93.2940685, cycling: 6, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '18', jobtitle: 'Judge', company: 'Company 18', lat: 34.17444811, long: -94.2944777, cycling: 5, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '19', jobtitle: 'Lawyer', company: 'Company 19', lat: 35.1696595, long: -95.2516052, cycling: 9, car: 5, bus: 5, walking: 5 },
+            { description: 'The quick brown fox jumps over the lazy dog.', id: '20', jobtitle: 'Senator', company: 'Company 20', lat: 36.1655557, long: -96.2340958, cycling: 5, car: 5, bus: 5, walking: 5 }
         ]
     };
 
@@ -197,15 +212,15 @@ function getDistance(currLatLong, jobLatLong, callback) {
 
         if (!err) {
             console.log(response);
-            let distanceArr = response.rows[0].elements.map(function(element){
+            let distanceArr = response.rows[0].elements.map(function (element) {
                 // in seconds
                 return element.duration.value;
             });
 
             console.log(distanceArr);
 
-            callback({car: -1, bicycle:-1, bus:-1, walk:-1});
-            
+            callback({ car: -1, bicycle: -1, bus: -1, walk: -1 });
+
         } else {
             console.log(err);
         }
