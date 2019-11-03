@@ -209,6 +209,7 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
 
         let jobLatLong = `${mojobsLatLong[i].lat},${mojobsLatLong[i].long}`;
         getDistance(currLatLong, jobLatLong, function (response) {
+            console.log(response);
             let jobAndDistance = mojobsAndDistances[i];
 
             jobAndDistance.car = response.car;
@@ -250,15 +251,22 @@ function getDistance(currLatLong, jobLatLong, callback) {
 
         if (!err) {
             console.log(response);
-            let distanceArr = response.rows[0].elements.map(function (element) {
-                // in seconds
-                return element.duration.value;
-            });
+            let elements = response.rows[0].elements;
+            let isArray = Array.isArray(elements);
+            let distanceValue,
+                distanceValues;
 
-            console.log(distanceArr);
-
-            callback({ car: -1, bicycle: -1, bus: -1, walk: -1 });
-
+            if (isArray) {
+                distanceValues = elements.map(function (element) {
+                    // in seconds
+                    return element.duration.value;
+                });
+                // distanceValues.join(',');
+                callback({ car: -1, bicycle: -1, bus: -1, walk: -1, gresp: distanceValues });
+            } else {
+                // distanceValue;
+                callback({ car: -1, bicycle: -1, bus: -1, walk: -1, gresp: distanceValue});
+            }
         } else {
             console.log(err);
         }
