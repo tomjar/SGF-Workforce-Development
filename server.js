@@ -12,8 +12,7 @@ const port = process.env.PORT || 3000;
 const db_url = process.env.MONGODB_URI;
 
 // Jobs api variables 
-const api_token = 'k6o0ANdEQWtHWaWNXmlbHQ3E5YPUAQUN4EmSeftJfd8GtCa9xD4WmKrudLaVisFeOcrhbEynzqdMJ8Tz';
-const api_url = `https://jobs.api.sgf.dev/api/event?api_token=${api_token}`;
+const api_url = `https://jobs.api.sgf.dev/api/event?api_token=${process.env.JOBS_API_KEY}`;
 
 app.get('/jobs/15', function (req, res) {
     mongodb.connect(db_url, (err, client) => {
@@ -64,8 +63,6 @@ app.get('/jobs/10', function (req, res) {
                 var tenJobs = result.slice(0, 9);
                 // 37.2119519,-93.2925957
                 let efactoryLatLong = '37.2119519,-93.2925957';
-                console.log('printing ten jobs!!');
-                console.log(tenJobs);
                 getJobsAndDistances(efactoryLatLong, tenJobs, function (response) {
                     res.send({ 'response': response });
                 });
@@ -185,27 +182,27 @@ function shutdown() {
  * @param {Array} mojobs 
  * @param {Function} callback 
  */
-function getJobsAndDistances(currLatLong, mojobs, callback) {
+function getJobsAndDistances(currLatLong, mojobs) {
 
-    var mojobsLatLong = mojobs.map(function (element, index) {
-        return {
-            id: element.id,
-            title: element.title,
-            description: element.description,
-            lat: element.location.lat,
-            long: element.location.lng,
-            company: element.location.name,
-            url: element.url,
-            urlimg: element.url_image,
-            phone: element.phone,
-            email: element.email
-        }
-    });
+    // var mojobsLatLong = mojobs.map(function (element, index) {
+    //     return {
+    //         id: element.id,
+    //         title: element.title,
+    //         description: element.description,
+    //         lat: element.location.lat,
+    //         long: element.location.lng,
+    //         company: element.location.name,
+    //         url: element.url,
+    //         urlimg: element.url_image,
+    //         phone: element.phone,
+    //         email: element.email
+    //     }
+    // });
 
 
     var mojobsAndDistances = [];
 
-    for (let i = 0; i < mojobsLatLong.length; i++) {
+    for (let i = 0; i < mojobs.length; i++) {
 
         let jobLatLong = `${mojobsLatLong[i].lat},${mojobsLatLong[i].long}`;
         getDistance (currLatLong, jobLatLong, function (response) {
@@ -228,7 +225,7 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
 
     console.log('calling back!!');
     console.log(mojobsAndDistances);
-    callback(mojobsAndDistances);
+    return mojobsAndDistances;
     
 }
 
@@ -243,7 +240,7 @@ function getJobsAndDistances(currLatLong, mojobs, callback) {
 function getDistance(currLatLong, jobLatLong, callback) {
     // https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
     const googleMapsClient = require('@google/maps').createClient({
-        key: 'AIzaSyDpQoxtbTKGtDD2Cg2F33P6rqhAfoq3GVM'
+        key: process.env.GOOGLE_API_KEY
     });
 
     // Geocode an address.
