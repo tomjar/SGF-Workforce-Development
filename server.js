@@ -204,7 +204,7 @@ function getJobsAndDistances(currLatLong, mojobs) {
 
     for (let i = 0; i < mojobs.length; i++) {
 
-        let jobLatLong = `${mojobsLatLong[i].lat},${mojobsLatLong[i].long}`;
+        let jobLatLong = `${mojobs[i].lat},${mojobs[i].long}`;
         getDistance (currLatLong, jobLatLong, function (response) {
             let jobAndDistance = mojobsAndDistances[i];
 
