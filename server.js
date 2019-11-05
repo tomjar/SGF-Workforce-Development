@@ -258,5 +258,5 @@ function getDistances (origin, destinations, callback) {
   })
 }
 
-process.on('SIGKILL', shutdown)
+process.on('SIGINT', shutdown)
 process.on('SIGTERM', shutdown)
