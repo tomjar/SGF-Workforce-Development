@@ -258,9 +258,5 @@ function getDistances (origin, destinations, callback) {
   })
 }
 
-process.on('SIGHUP', shutdown)
 process.on('SIGKILL', shutdown)
-process.on('SIGSTOP', shutdown)
 process.on('SIGTERM', shutdown)
-process.on('SIGCHLD', shutdown)
-process.on('SIGABRT', shutdown)
