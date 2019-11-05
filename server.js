@@ -14,7 +14,7 @@ const EVENT_API_URL = `https://jobs.api.sgf.dev/api/event?api_token=${process.en
 const JOB_API_URL = `https://jobs.api.sgf.dev/api/job?api_token=${process.env.JOBS_API_KEY}`
 
 app.get('/events/:count', function (req, res, next) {
-  let count = req.params.count
+  let count = parseInt(req.params.count)
   if (typeof count !== 'number') res.send({ message: 'sorry not a number' })
   if (count > 15) {
     count = 15
@@ -52,7 +52,7 @@ app.get('/events/:count', function (req, res, next) {
 })
 
 app.get('/jobs/:count', function (req, res, next) {
-  let count = req.params.count
+  let count = parseInt(req.params.count)
 
   if (typeof count !== 'number') {
     res.send({ message: 'sorry not a number' })
