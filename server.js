@@ -2,7 +2,6 @@ const express = require('express')
 const request = require('request')
 const mongodb = require('mongodb').MongoClient
 const googmap = require('@google/maps')
-const async = require('async')
 
 // Server variables
 const app = express()
