@@ -106,7 +106,7 @@ app.get('/jobs/:count', function (req, res, next) {
             const elements = response.rows[0].elements
             res.send({ response: elements })
           } else {
-            console.log(e)
+            console.log(err)
             res.send('done with error')
           }
         })
@@ -138,7 +138,7 @@ app.get('/google-api-test', function (req, res) {
         response: elements
       })
     } else {
-      console.log(e)
+      console.log(err)
       res.send('done with error')
     }
   })
@@ -167,6 +167,7 @@ app.listen(port, () => {
       })
     } else {
       console.log(err)
+      res.send('done with error')
     }
   })
 
@@ -189,6 +190,7 @@ app.listen(port, () => {
       })
     } else {
       console.log(err)
+      res.send('done with error')
     }
   })
 })
@@ -211,6 +213,7 @@ function shutdown () {
       })
     } catch (e) {
       console.log(e)
+      res.send('done with error')
     }
   })
 
