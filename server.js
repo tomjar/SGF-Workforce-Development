@@ -89,8 +89,31 @@ app.get('/jobs/:count', function (req, res, next) {
         })
         // 37.2119519,-93.2925957
         const origin = '37.2119519,-93.2925957'
-        getJobsAndDistances(origin, jobs, function (response) {
-          res.send({ response: response })
+
+        const latLongJoined = jobs.map(function (element, index) {
+          return `${element.lat},${element.long}`
+        })
+
+        const destinations = latLongJoined.join('|')
+
+        googleMapsClient.distanceMatrix({
+          units: 'imperial',
+          origins: origin,
+          destinations: destinations,
+          mode: 'walking'
+        }, function (err, response) {
+          if (!err) {
+            const elements = response.rows[0].elements
+
+            const distanceValues = elements.map(function (element) {
+              // in seconds
+              // response.json.rows[0].elements[0].distance.text
+              // response.json.rows[0].elements[0].duration.text
+              return element.duration.distance.text
+            })
+
+            res.send({ response: distanceValues })
+          }
         })
       })
     } catch (e) {
@@ -104,8 +127,24 @@ app.get('/google-api-test', function (req, res) {
   const origin = '405 N Jefferson Ave, Springfield, MO 65806'
   const destinations = '1423 N Jefferson Ave, Springfield, MO 65802'
 
-  getDistances(origin, destinations, function (response) {
-    res.send({ message: `The distance to the destination: ${response.json.rows[0].elements[0].distance}.` })
+  googleMapsClient.distanceMatrix({
+    units: 'imperial',
+    origins: origin,
+    destinations: destinations,
+    mode: 'walking'
+  }, function (err, response) {
+    if (!err) {
+      const elements = response.rows[0].elements
+
+      // in seconds
+      // response.json.rows[0].elements[0].distance.text
+      // response.json.rows[0].elements[0].duration.text
+      response.send({
+        response: elements.map(function (element) {
+          return element.duration.distance.text
+        })
+      })
+    }
   })
 })
 
@@ -180,75 +219,6 @@ function shutdown () {
   })
 
   process.exit(0)
-}
-
-/**
- *
- * @param {String} origin
- * @param {Array} mojobs
- * @param {Function} callback
- */
-function getJobsAndDistances (origin, mojobs, callback) {
-  // var mojobsLatLong = mojobs.map(function (element, index) {
-  //     return {
-  //         id: element.id,
-  //         title: element.title,
-  //         description: element.description,
-  //         lat: element.location.lat,
-  //         long: element.location.lng,
-  //         company: element.location.name,
-  //         url: element.url,
-  //         urlimg: element.url_image,
-  //         phone: element.phone,
-  //         email: element.email
-  //     }
-  // });
-
-  const latLongJoined = mojobs.map(function (element, index) {
-    return `${element.lat},${element.long}`
-  })
-
-  const destinations = latLongJoined.join('|')
-
-  getDistances(origin, destinations, function (response) {
-    callback(response)
-  })
-}
-
-/**
- * TODO
- * @param {String} origin
- * @param {String} destinations
- * @param {Function} callback
- */
-function getDistances (origin, destinations, callback) {
-  // https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,
-  // -73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905
-  // 615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9
-  // 976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.5
-  // 98566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.633
-  // 4271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
-
-  // get that distance!
-  googleMapsClient.distanceMatrix({
-    units: 'imperial',
-    origins: origin,
-    destinations: destinations,
-    mode: 'walking'
-  }, function (err, response) {
-    if (!err) {
-      const elements = response.rows[0].elements
-
-      const distanceValues = elements.map(function (element) {
-        // in seconds
-        // response.json.rows[0].elements[0].distance.text
-        // response.json.rows[0].elements[0].duration.text
-        return element.duration.distance.text
-      })
-
-      callback(distanceValues)
-    }
-  })
 }
 
 process.on('SIGINT', shutdown)
