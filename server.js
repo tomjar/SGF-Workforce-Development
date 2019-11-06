@@ -1,6 +1,7 @@
 const express = require('express')
 const request = require('request')
 const mongodb = require('mongodb').MongoClient
+const googmap = require('@google/maps')
 
 // Server variables
 const app = express()
@@ -12,6 +13,10 @@ const DB_URL = process.env.MONGODB_URI
 // Jobs api variables
 const EVENT_API_URL = `https://jobs.api.sgf.dev/api/event?api_token=${process.env.JOBS_API_KEY}`
 const JOB_API_URL = `https://jobs.api.sgf.dev/api/job?api_token=${process.env.JOBS_API_KEY}`
+
+const googleMapsClient = googmap.createClient({
+  key: process.env.GOOGLE_API_KEY
+})
 
 app.get('/events/:count', function (req, res, next) {
   let count = parseInt(req.params.count)
@@ -99,8 +104,15 @@ app.get('/google-api-test', function (req, res) {
   const origin = '405 N Jefferson Ave, Springfield, MO 65806'
   const destinations = '1423 N Jefferson Ave, Springfield, MO 65802'
 
-  getDistances(origin, destinations, function (response) {
-    res.send({ response: response })
+  googleMapsClient.distanceMatrix({
+    units: 'imperial',
+    origins: origin,
+    destinations: destinations,
+    mode: 'walking'
+  }, function (err, response) {
+    if (!err) {
+      res.send({ response: response })
+    }
   })
 })
 
@@ -223,9 +235,6 @@ function getDistances (origin, destinations, callback) {
   // 976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.5
   // 98566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.633
   // 4271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
-  const googleMapsClient = require('@google/maps').createClient({
-    key: process.env.GOOGLE_API_KEY
-  })
 
   // get that distance!
   googleMapsClient.distanceMatrix({
