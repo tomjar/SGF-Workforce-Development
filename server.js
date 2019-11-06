@@ -104,15 +104,8 @@ app.get('/google-api-test', function (req, res) {
   const origin = '405 N Jefferson Ave, Springfield, MO 65806'
   const destinations = '1423 N Jefferson Ave, Springfield, MO 65802'
 
-  googleMapsClient.distanceMatrix({
-    units: 'imperial',
-    origins: origin,
-    destinations: destinations,
-    mode: 'walking'
-  }, function (err, response) {
-    if (!err) {
-      res.send({ message: `The distance to the destination: ${response.json.rows[0].elements[0].distance}.` })
-    }
+  getDistances(origin, destinations, function (response) {
+    res.send({ message: `The distance to the destination: ${response.json.rows[0].elements[0].distance}.` })
   })
 })
 
@@ -245,24 +238,15 @@ function getDistances (origin, destinations, callback) {
   }, function (err, response) {
     if (!err) {
       const elements = response.rows[0].elements
-      const isArray = Array.isArray(elements)
 
-      let distanceValues = []
+      const distanceValues = elements.map(function (element) {
+        // in seconds
+        // response.json.rows[0].elements[0].distance.text
+        // response.json.rows[0].elements[0].duration.text
+        return element.duration.distance.text
+      })
 
-      if (isArray) {
-        distanceValues = elements.map(function (element) {
-          // in seconds
-          return element.duration.value
-        })
-        // distanceValues.join(',');
-        callback(distanceValues)
-      } else {
-        // distanceValue;
-        distanceValues.push(elements.duration.value)
-        callback(distanceValues)
-      }
-    } else {
-      console.log(err)
+      callback(distanceValues)
     }
   })
 }
