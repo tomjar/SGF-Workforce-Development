@@ -105,6 +105,9 @@ app.get('/jobs/:count', function (req, res, next) {
           if (!err) {
             const elements = response.rows[0].elements
             res.send({ response: elements })
+          } else {
+            console.log(e)
+            res.send('done with error')
           }
         })
       })
@@ -134,6 +137,9 @@ app.get('/google-api-test', function (req, res) {
       response.send({
         response: elements
       })
+    } else {
+      console.log(e)
+      res.send('done with error')
     }
   })
 })
