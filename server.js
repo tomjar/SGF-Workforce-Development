@@ -34,7 +34,7 @@ app.get('/events/:count', function (req, res, next) {
       db.collection('events').find({}).toArray(function (err, result) {
         if (err) throw err
 
-        var events = result.slice(0, count).async.map(function (element, index) {
+        var events = result.slice(0, count).map(function (element, index) {
           return {
             url: element.url,
             urlimg: element.url_image,
@@ -77,7 +77,7 @@ app.get('/jobs/:count', function (req, res, next) {
       db.collection('jobs').find({}).toArray(function (err, result) {
         if (err) throw err
 
-        var jobs = result.slice(0, count).async.map(function (element, index) {
+        var jobs = result.slice(0, count).map(function (element, index) {
           return {
             url: element.url,
             description: element.description,
@@ -91,7 +91,7 @@ app.get('/jobs/:count', function (req, res, next) {
         // 37.2119519,-93.2925957
         const origin = '37.2119519,-93.2925957'
 
-        const latLongJoined = jobs.async.map(function (element, index) {
+        const latLongJoined = jobs.map(function (element, index) {
           return `${element.lat},${element.long}`
         })
 
