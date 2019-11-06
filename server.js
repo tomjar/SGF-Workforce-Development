@@ -111,7 +111,7 @@ app.get('/google-api-test', function (req, res) {
     mode: 'walking'
   }, function (err, response) {
     if (!err) {
-      res.send({ response: response })
+      res.send({ message: `The distance to the destination: ${response.json.rows[0].elements[0].distance}.` })
     }
   })
 })
