@@ -57,6 +57,8 @@ app.get('/events/:count', function (req, res, next) {
 })
 
 app.get('/jobs/:count', function (req, res, next) {
+  res.send({ message: 'under constructionm use /events/{number} instead' })
+
   let count = parseInt(req.params.count)
 
   if (typeof count !== 'number') {
@@ -119,6 +121,8 @@ app.get('/jobs/:count', function (req, res, next) {
 })
 
 app.get('/google-api-test', function (req, res) {
+  res.send({ message: 'under construction, come back later' })
+
   const origin = '405 N Jefferson Ave, Springfield, MO 65806'
   const destinations = '1423 N Jefferson Ave, Springfield, MO 65802'
 
@@ -144,7 +148,7 @@ app.get('/google-api-test', function (req, res) {
   })
 })
 
-app.get('/', (req, res) => res.send({ README_MSG: 'NOTE!: Try out /google-api-test to test the google api works. /events/NUMBER and /jobs/NUMBER is currently be tested!' }))
+app.get('/', (req, res) => res.send({ README_MSG: 'Under construction...' }))
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
