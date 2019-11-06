@@ -104,15 +104,7 @@ app.get('/jobs/:count', function (req, res, next) {
         }, function (err, response) {
           if (!err) {
             const elements = response.rows[0].elements
-
-            const distanceValues = elements.map(function (element) {
-              // in seconds
-              // response.json.rows[0].elements[0].distance.text
-              // response.json.rows[0].elements[0].duration.text
-              return element.duration.distance.text
-            })
-
-            res.send({ response: distanceValues })
+            res.send({ response: elements })
           }
         })
       })
@@ -140,9 +132,7 @@ app.get('/google-api-test', function (req, res) {
       // response.json.rows[0].elements[0].distance.text
       // response.json.rows[0].elements[0].duration.text
       response.send({
-        response: elements.map(function (element) {
-          return element.duration.distance.text
-        })
+        response: elements
       })
     }
   })
