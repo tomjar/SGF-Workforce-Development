@@ -104,7 +104,7 @@ app.get('/google-api-test', function (req, res) {
   })
 })
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/', (req, res) => res.send({ README_MSG: 'NOTE!: Try out /google-api-test to test the google api works. /events/NUMBER and /jobs/NUMBER is currently be tested!' }))
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)

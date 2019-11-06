@@ -2,7 +2,7 @@
   "name": "udacity-flashcards-project",
   "version": "0.0.0",
   "description": "No description",
-  "author": null,
+  "author": "generational-gap (tomjar, doug3033, EricM96, bramberdon)",
   "private": true,
   "dependencies": {
     "@google/maps": "^1.0.2",
