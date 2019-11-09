@@ -8,9 +8,7 @@ const app = express()
 const port = process.env.PORT || 3000
 
 // Database variables
-const DB_URL = process.env.ENVIRONMENT === 'production'
-  ? process.env.MONGODB_URI
-  : 'mongodb://localhost:27017/workforce'
+const DB_URL = process.env.MONGODB_URI
 
 const EVENT_API_URL = `https://jobs.api.sgf.dev/api/event?api_token=${process.env.JOBS_API_KEY}`
 const JOB_API_URL = `https://jobs.api.sgf.dev/api/job?api_token=${process.env.JOBS_API_KEY}`
