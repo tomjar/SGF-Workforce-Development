@@ -8,15 +8,46 @@ const app = express()
 const port = process.env.PORT || 3000
 
 // Database variables
-const DB_URL = process.env.MONGODB_URI
+const DB_URL = process.env.ENVIRONMENT === 'production'
+  ? process.env.MONGODB_URI
+  : 'mongodb://localhost:27017/workforce'
 
-// Jobs api variables
 const EVENT_API_URL = `https://jobs.api.sgf.dev/api/event?api_token=${process.env.JOBS_API_KEY}`
 const JOB_API_URL = `https://jobs.api.sgf.dev/api/job?api_token=${process.env.JOBS_API_KEY}`
-
+const walking = 'walking'
+const driving = 'driving'
+const bicycling = 'bicycling'
+const transit = 'transit'
 const googleMapsClient = googmap.createClient({
   key: process.env.GOOGLE_API_KEY
 })
+
+/**
+ * This function wraps the google distance api in a async function.
+ * @param {String} origin the current location of the user
+ * @param {Array} destArr a array of addresses or lat long
+ * @param {String} travelMode the mode of travel
+ * @param {Function} callback a callback function to run once a response has occurred
+ */
+async function getDistancesAndDurations (origin, destArr, travelMode, callback) {
+  var handleResponse = function (err, response) {
+    if (!err) {
+      var distancesAndDurations = response.json.rows[0].elements.map(function (element) {
+        return { distance: element.distance.text, duration: element.duration.text }
+      })
+      callback(distancesAndDurations)
+    } else {
+      console.error(err)
+    }
+  }
+
+  await googleMapsClient.distanceMatrix({
+    units: 'imperial',
+    origins: origin,
+    destinations: destArr.join('|'),
+    mode: travelMode
+  }, await handleResponse)
+}
 
 app.get('/events/:count', function (req, res, next) {
   let count = parseInt(req.params.count)
@@ -50,15 +81,13 @@ app.get('/events/:count', function (req, res, next) {
         res.send({ data: events })
       })
     } catch (e) {
-      console.log(e)
+      console.error(e)
       res.send('done with error')
     }
   })
 })
 
 app.get('/jobs/:count', function (req, res, next) {
-  res.send({ message: 'under constructionm use /events/{number} instead' })
-
   let count = parseInt(req.params.count)
 
   if (typeof count !== 'number') {
@@ -86,69 +115,49 @@ app.get('/jobs/:count', function (req, res, next) {
             jobtitle: element.title,
             jobtype: element.job_type,
             company: element.employer.name,
-            payrate: element.pay_rate
+            payrate: element.pay_rate,
+            locations: element.locations.data.map((element) => {
+              return `${element.name} ${element.street} ${element.city} ${element.state} ${element.state}`
+            })
+
           }
         })
-        // 37.2119519,-93.2925957
-        const origin = '37.2119519,-93.2925957'
 
-        const latLongJoined = jobs.map(function (element, index) {
-          return `${element.lat},${element.long}`
-        })
+        res.send({ response: jobs })
 
-        const destinations = latLongJoined.join('|')
-
-        googleMapsClient.distanceMatrix({
-          units: 'imperial',
-          origins: origin,
-          destinations: destinations,
-          mode: 'walking'
-        }, function (err, response) {
-          if (!err) {
-            const elements = response.rows[0].elements
-            res.send({ response: elements })
-          } else {
-            console.log(err)
-            res.send('done with error')
-          }
-        })
+        // const destinations = jobs.map((element) => {
+        //   return element.locations
+        // })
+        // const jobIds = jobs.map((element) => {
+        //   return element.id
+        // })
       })
     } catch (e) {
-      console.log(e)
+      console.error(e)
       res.send('done with error')
     }
   })
 })
 
-app.get('/google-api-test', function (req, res) {
-  res.send({ message: 'under construction, come back later' })
-
+app.get('/google-api-test', function (req, res, next) {
   const origin = '405 N Jefferson Ave, Springfield, MO 65806'
-  const destinations = '1423 N Jefferson Ave, Springfield, MO 65802'
+  const destinations = ['1423 N Jefferson Ave, Springfield, MO 65802']
 
-  googleMapsClient.distanceMatrix({
-    units: 'imperial',
-    origins: origin,
-    destinations: destinations,
-    mode: 'walking'
-  }, function (err, response) {
-    if (!err) {
-      const elements = response.rows[0].elements
-
-      // in seconds
-      // response.json.rows[0].elements[0].distance.text
-      // response.json.rows[0].elements[0].duration.text
-      res.send({
-        response: elements
+  // easy as 1, 2, 3 and 4
+  getDistancesAndDurations(origin, destinations, walking, (resp1) => {
+    getDistancesAndDurations(origin, destinations, driving, (resp2) => {
+      getDistancesAndDurations(origin, destinations, bicycling, (resp3) => {
+        getDistancesAndDurations(origin, destinations, transit, (resp4) => {
+          const allDistancesAndDurations = { walking: resp1, driving: resp2, bicycling: resp3, transit: resp4 }
+          res.send({ response: allDistancesAndDurations })
+        })
       })
-    } else {
-      console.log(err)
-      res.send('done with error')
-    }
+    })
   })
 })
 
-app.get('/', (req, res) => res.send({ README_MSG: 'Under construction...' }))
+app.get('/', (req, res) => res.send(`<p>NOTE!: Try out /google-api-test to test the google api.</p>
+<p>try out /events/{number} or /jobs/{number}</p>`))
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
